@@ -1,0 +1,34 @@
+/*
+ * 
+ */
+package com.socket;
+
+/**
+ *
+ * @author llt
+ */
+public class BanAuthorization extends Decorate
+{
+    Decorate decorate;
+    
+    String description = "You won the Ban Authorization!" ;
+    
+    
+    public BanAuthorization(Decorate decorate)
+    {
+    
+        this.decorate = decorate;
+    
+    
+    }
+    
+    public String getPrize()
+    {
+     
+        String prize = "+ Authorization to ban user";
+    
+        return decorate.getPrize()+ prize;
+    
+    }
+    
+}
