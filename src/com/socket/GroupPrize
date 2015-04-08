@@ -1,0 +1,45 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.socket;
+
+/**
+ *
+ * @author llt
+ */
+public class EarnCredit extends Decorate
+{
+   
+    Decorate decorate;
+    String description = "You won the credit! ";
+    
+ 
+    public EarnCredit()
+    {
+     
+        this.decorate = decorate;
+    
+    }
+   public  String getPrize()
+   {
+   
+     String prize = "Won the credit";
+    
+     return prize;
+           
+   
+   };
+   
+   public String getDescription()
+   {
+     return description;
+   
+   }
+   
+  
+   
+    
+    
+}
