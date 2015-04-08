@@ -1,0 +1,123 @@
+/*
+ * 
+ */
+package com.socket;
+
+import java.math.*;
+import java.util.*;
+
+/**
+ *
+ * @author Litian Liu
+ */
+public class serverDice 
+{
+    //static int side= 0;
+    private static serverDice sd;
+    
+    
+    
+    private serverDice()
+    {
+      //this.side = side;
+        
+    
+    }
+    
+    
+    public static synchronized serverDice getInstance()
+    {
+         
+        sd = new serverDice();
+        
+        return sd;
+    
+    
+    }
+    
+    public synchronized ArrayList rollTheDice(int side)
+    {
+         
+         
+        int d1=0;
+       
+        int d2=0;
+        
+        d1 = (int)(Math.random()*side);
+        d2 = (int)(Math.random()*side);
+      
+        //int[] result = new int[1];
+        //result[0] = d1;
+        //result[1] = d2;
+        
+        ArrayList arraylist = new ArrayList();
+        
+        arraylist.add(d1);
+        arraylist.add(d2);
+        
+        if(d1==6 &&d2==6)
+        {
+            
+            
+            arraylist.add(this.prizeCredit());
+            
+            return arraylist;
+                   
+        }
+        else if(d1==side & d2==side)
+        {
+        
+            
+            arraylist.add(this.prizeBan());
+            
+            return arraylist;
+            
+            
+        }
+        else if(d1+d2 == side)
+        {
+            
+            arraylist.add(this.prizeGroup());
+            
+            return arraylist;          
+            
+        }
+        else
+              return arraylist;
+      
+    }
+    
+    public String prizeCredit()
+    {
+      
+        Decorate prizeCredit = new EarnCredit();
+        
+        return prizeCredit.getPrize();
+    
+    }
+    public String prizeBan()
+    {
+        Decorate dBan = new EarnCredit();
+        
+        dBan = new BanAuthorization(dBan);
+        
+        return dBan.getPrize();
+        
+    }
+    
+    public String prizeGroup()
+    {
+         Decorate dBan = new EarnCredit();
+        
+         dBan = new BanAuthorization(dBan);
+         dBan = new GroupPrize(dBan);
+         
+         return dBan.getPrize();
+        
+    
+    }
+    
+    
+    
+    
+}
