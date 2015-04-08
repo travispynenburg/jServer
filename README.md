@@ -1,6 +1,7 @@
 # jServer
 A simple chat server for SNHU IT-620.
-<br>1. The Source is the application of the server side including class of ServerFrame, Message, SocketFrame, Database, ServerDice, BanAuthorization, Decorate, EarnCreadit, GroupPrize</br>
+<br>1. The Source is the application of the server side including class of ServerFrame, Message, SocketFrame, Database, ServerDice, BanAuthorization, Decorate, EarnCreadit, GroupPrize, User, saveAdapter</br>
+It also includes the save.cpp/save.o files for use with the adapter class which are written in C.
   <br>2. The interface that Decorate used to implment the Decorator pattern design.</br>
   <br>3. Boot the server first. Browse the Data.xml file and start the server.</br>
   <br>4. The Client side application must be started after server application.</br>
