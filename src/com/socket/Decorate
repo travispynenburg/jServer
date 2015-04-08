@@ -1,0 +1,18 @@
+/*
+ * 
+ */
+package com.socket;
+
+/**
+ *
+ * @author llt
+ */
+public abstract class Decorate 
+{
+    
+    String description = "You won the credit";
+    
+    public abstract String getPrize();  
+    
+    
+}
