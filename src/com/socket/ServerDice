@@ -25,12 +25,15 @@ public class serverDice
     }
     
     
-    public static synchronized serverDice getInstance()
+    public static serverDice getInstance()
     {
-         
-        sd = new serverDice();
-        
-        return sd;
+        if(sd== null)
+        {
+         sd = new serverDice();
+         return sd;
+        }
+        else
+         return sd;
     
     
     }
