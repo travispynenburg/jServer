@@ -22,6 +22,7 @@ class ServerThread extends Thread {
     }
     
     public void send(Message msg){
+        new expression(msg);
         try {
             streamOut.writeObject(msg);
             streamOut.flush();
