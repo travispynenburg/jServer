@@ -1,17 +1,4 @@
 /****************************************************************************
- * [S]imulated [M]edieval [A]dventure multi[U]ser [G]ame      |   \\._.//   *
- * -----------------------------------------------------------|   (0...0)   *
- * SMAUG 1.4 (C) 1994, 1995, 1996, 1998  by Derek Snider      |    ).:.(    *
- * -----------------------------------------------------------|    {o o}    *
- * SMAUG code team: Thoric, Altrag, Blodkai, Narn, Haus,      |   / ' ' \   *
- * Scryn, Rennard, Swordbearer, Gorog, Grishnakh, Nivek,      |~'~.VxvxV.~'~*
- * Tricops and Fireblade                                      |             *
- * ------------------------------------------------------------------------ *
- * Merc 2.1 Diku Mud improvments copyright (C) 1992, 1993 by Michael        *
- * Chastain, Michael Quan, and Mitchell Tse.                                *
- * Original Diku Mud copyright (C) 1990, 1991 by Sebastian Hammer,          *
- * Michael Seifert, Hans Henrik St{rfeldt, Tom Madsen, and Katja Nyboe.     *
- * ------------------------------------------------------------------------ *
  *		     Character saving and loading module		    *
  ****************************************************************************/
 
@@ -375,33 +362,31 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
       fprintf( fp, "Mentalstate  %d\n",	ch->mental_state	);
 
         fprintf( fp, "Password     %s~\n",	ch->pcdata->pwd.c_str()		);
-	if ( ch->pcdata->rank && ch->pcdata->rank[0] != '\0' )
-	  fprintf( fp, "Rank         %s~\n",	ch->pcdata->rank	);
-	if ( ch->pcdata->bestowments && ch->pcdata->bestowments[0] != '\0' )
-	  fprintf( fp, "Bestowments  %s~\n", 	ch->pcdata->bestowments );
-	fprintf( fp, "Title        %s~\n",	ch->pcdata->title	);
-	if ( ch->pcdata->homepage && ch->pcdata->homepage[0] != '\0' )
-	  fprintf( fp, "Homepage     %s~\n",	ch->pcdata->homepage	);
-	if ( ch->pcdata->bio && ch->pcdata->bio[0] != '\0' )
-	  fprintf( fp, "Bio          %s~\n",	ch->pcdata->bio 	);
-	if ( ch->pcdata->authed_by && ch->pcdata->authed_by[0] != '\0' )
-	  fprintf( fp, "AuthedBy     %s~\n",	ch->pcdata->authed_by	);
+	if ( !ch->pcdata->rank.empty() && ch->pcdata->rank[0] != '\0' )
+	  fprintf( fp, "Rank         %s~\n",	ch->pcdata->rank.c_str()	);
+	if ( !ch->pcdata->bestowments.empty() && ch->pcdata->bestowments[0] != '\0' )
+	  fprintf( fp, "Bestowments  %s~\n", 	!ch->pcdata->bestowments.c_str() );
+	fprintf( fp, "Title        %s~\n",	!ch->pcdata->title.c_str()	);
+	if ( !ch->pcdata->homepage.empty() && ch->pcdata->homepage[0] != '\0' )
+	  fprintf( fp, "Homepage     %s~\n",	ch->pcdata->homepage.c_str()	);
+	if ( !ch->pcdata->bio.empty() && ch->pcdata->bio[0] != '\0' )
+	  fprintf( fp, "Bio          %s~\n",	ch->pcdata->bio.c_str() 	);
+	if ( !ch->pcdata->authed_by.empty() && ch->pcdata->authed_by[0] != '\0' )
+	  fprintf( fp, "AuthedBy     %s~\n",	ch->pcdata->authed_by.c_str()	);
 	if ( ch->pcdata->min_snoop )
 	  fprintf( fp, "Minsnoop     %d\n",	ch->pcdata->min_snoop	);
-	if ( ch->pcdata->prompt && *ch->pcdata->prompt )
-	  fprintf( fp, "Prompt       %s~\n",	ch->pcdata->prompt	);
- 	if ( ch->pcdata->fprompt && *ch->pcdata->fprompt )
-	  fprintf( fp, "FPrompt	     %s~\n",    ch->pcdata->fprompt	);
+	if ( !ch->pcdata->prompt.empty() )
+	  fprintf( fp, "Prompt       %s~\n",	ch->pcdata->prompt.c_str()	);
+ 	if ( !ch->pcdata->fprompt.empty() )
+	  fprintf( fp, "FPrompt	     %s~\n",    ch->pcdata->fprompt.c_str()	);
 	if ( ch->pcdata->pagerlen != 24 )
 	  fprintf( fp, "Pagerlen     %d\n",	ch->pcdata->pagerlen	);
         for ( pal = ch->pcdata->first_alias; pal; pal = pal->next )
         {
-            if ( !pal->name || !pal->cmd || !*pal->name || !*pal->cmd )
+            if ( !pal->name.c_str() || !pal->cmd.c_str() || !*pal->name.c_str() || !*pal->cmd.c_str() )
                 continue;
             fprintf( fp, "Alias        %s~ %s~\n",
-                     pal->name,
-                     pal->cmd
-                   );
+                     pal->name.c_str(), pal->cmd.c_str() );
         }
 	
 	/* If ch is ignoring players then store those players */
@@ -409,16 +394,16 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
     	IGNORE_DATA *temp;
 	for(temp = ch->pcdata->first_ignored; temp; temp = temp->next)
 	{
-		fprintf(fp,"Ignored      %s~\n", temp->name);
+		fprintf(fp,"Ignored      %s~\n", temp->name.c_str());
 	}
         }
 	  
 	if ( IS_IMMORTAL( ch ) )
 	{
-	  if ( ch->pcdata->bamfin && ch->pcdata->bamfin[0] != '\0' )
-	    fprintf( fp, "Bamfin       %s~\n",	ch->pcdata->bamfin	);
-	  if ( ch->pcdata->bamfout && ch->pcdata->bamfout[0] != '\0' )
-	    fprintf( fp, "Bamfout      %s~\n",	ch->pcdata->bamfout	);
+	  if ( !ch->pcdata->bamfin.empty() && ch->pcdata->bamfin[0] != '\0' )
+	    fprintf( fp, "Bamfin       %s~\n",	ch->pcdata->bamfin.c_str()	);
+	  if ( !ch->pcdata->bamfout.empty() && ch->pcdata->bamfout[0] != '\0' )
+	    fprintf( fp, "Bamfout      %s~\n",	ch->pcdata->bamfout.c_str()	);
           if ( ch->trust )
             fprintf( fp, "Trust        %d\n",	ch->trust		);
           if ( ch->pcdata && ch->pcdata->restore_time )
@@ -435,15 +420,15 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	  					 ch->pcdata->m_range_hi	);
 	}
 	if ( ch->pcdata->council)
-	  fprintf( fp, "Council      %s~\n", 	ch->pcdata->council_name );
-        if ( ch->pcdata->deity_name && ch->pcdata->deity_name[0] != '\0' )
-	  fprintf( fp, "Deity	     %s~\n",	ch->pcdata->deity_name	 );
-	if ( ch->pcdata->clan_name && ch->pcdata->clan_name[0] != '\0' )
-	  fprintf( fp, "Clan         %s~\n",	ch->pcdata->clan_name	);
+	  fprintf( fp, "Council      %s~\n", 	ch->pcdata->council_name.c_str() );
+        if ( !ch->pcdata->deity_name.empty() && ch->pcdata->deity_name[0] != '\0' )
+	  fprintf( fp, "Deity	     %s~\n",	ch->pcdata->deity_name.c_str()	 );
+	if ( !ch->pcdata->clan_name.empty() && ch->pcdata->clan_name[0] != '\0' )
+	  fprintf( fp, "Clan         %s~\n",	ch->pcdata->clan_name.c_str()	);
         fprintf( fp, "Flags        %d\n",	ch->pcdata->flags	);
         if ( ch->pcdata->release_date > current_time )
             fprintf( fp, "Helled       %d %s~\n",
-        	(int)ch->pcdata->release_date, ch->pcdata->helled_by );
+        	(int)ch->pcdata->release_date, ch->pcdata->helled_by.c_str() );
 	fprintf( fp, "PKills       %d\n",	ch->pcdata->pkills	);
 	fprintf( fp, "PDeaths      %d\n",	ch->pcdata->pdeaths	);
  	if ( get_timer( ch , TIMER_PKILLED)       
@@ -475,33 +460,33 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 	    ch->pcdata->condition[1],
 	    ch->pcdata->condition[2],
 	    ch->pcdata->condition[3] );
-	if ( ch->desc && ch->desc->host )
-            fprintf( fp, "Site         %s\n", ch->desc->host );
+	if ( ch->desc && !ch->desc->host.c_str() )
+            fprintf( fp, "Site         %s\n", ch->desc->host.c_str() );
 	else
             fprintf( fp, "Site         (Link-Dead)\n" );
          for (sn = 0; sn < AT_MAXCOLOR; ++sn)
            if (ch->pcdata->colorize[sn] != -1)
-             fprintf( fp, "Color        %s %d\n", at_color_table[sn].name, ch->pcdata->colorize[sn] );
+             fprintf( fp, "Color        %s %d\n", at_color_table[sn].name.c_str(), ch->pcdata->colorize[sn] );
 	for ( sn = 1; sn < top_sn; sn++ )
 	{
-	    if ( skill_table[sn]->name && ch->pcdata->learned[sn] > 0 )
+	    if ( !skill_table[sn]->name.empty() && ch->pcdata->learned[sn] > 0 )
 		switch( skill_table[sn]->type )
 		{
 		    default:
 			fprintf( fp, "Skill        %d '%s'\n",
-			  ch->pcdata->learned[sn], skill_table[sn]->name );
+			  ch->pcdata->learned[sn], skill_table[sn]->name.c_str() );
 			break;
 		    case SKILL_SPELL:
 			fprintf( fp, "Spell        %d '%s'\n",
-			  ch->pcdata->learned[sn], skill_table[sn]->name );
+			  ch->pcdata->learned[sn], skill_table[sn]->name.c_str() );
 			break;
 		    case SKILL_WEAPON:
 			fprintf( fp, "Weapon       %d '%s'\n",
-			  ch->pcdata->learned[sn], skill_table[sn]->name );
+			  ch->pcdata->learned[sn], skill_table[sn]->name.c_str() );
 			break;
 		    case SKILL_TONGUE:
 			fprintf( fp, "Tongue       %d '%s'\n",
-			  ch->pcdata->learned[sn], skill_table[sn]->name );
+			  ch->pcdata->learned[sn], skill_table[sn]->name.c_str() );
 			break;
 		}
 	}
@@ -513,7 +498,7 @@ void fwrite_char( CHAR_DATA *ch, FILE *fp )
 
 	if ( paf->type >= 0 && paf->type < TYPE_PERSONAL )
 	  fprintf( fp, "AffectData   '%s' %3d %3d %3d %s\n",
-	    skill->name,
+	    skill->name.c_str(),
 	    paf->duration,
 	    paf->modifier,
 	    paf->location,
@@ -574,7 +559,7 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest,
      * Do NOT save prototype items!				-Thoric
      */
     if ( (ch && ch->level[max_sec_level(ch)] < obj->level && 
-          !xIS_SET(ch->class, CLASS_BARBARIAN))
+          !xIS_SET(ch->char_class, CLASS_BARBARIAN))
     || ( obj->item_type == ITEM_KEY && !IS_OBJ_STAT(obj, ITEM_CLANOBJECT ))
     ||   obj_extracted(obj) 
     ||   IS_OBJ_STAT( obj, ITEM_PROTOTYPE )
@@ -588,14 +573,14 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest,
 	fprintf( fp, "Nest         %d\n",	iNest		     );
     if ( obj->count > 1 )
 	fprintf( fp, "Count        %d\n",	obj->count	     );
-    if ( QUICKMATCH( *obj->name, *obj->pIndexData->name ) == 0 )
-	fprintf( fp, "Name         %s~\n",	obj->name	     );
-    if ( QUICKMATCH( *obj->short_descr, *obj->pIndexData->short_descr ) == 0 )
-	fprintf( fp, "ShortDescr   %s~\n",	obj->short_descr     );
-    if ( QUICKMATCH( *obj->description, *obj->pIndexData->description ) == 0 )
-	fprintf( fp, "Description  %s~\n",	obj->description     );
-    if ( QUICKMATCH( *obj->action_desc, *obj->pIndexData->action_desc ) == 0 )
-	fprintf( fp, "ActionDesc   %s~\n",	obj->action_desc     );
+    if ( QUICKMATCH( *obj->name.c_str(), *obj->pIndexData->name.c_str() ) == 0 )
+	fprintf( fp, "Name         %s~\n",	obj->name.c_str()	     );
+    if ( QUICKMATCH( *obj->short_descr.c_str(), *obj->pIndexData->short_descr.c_str() ) == 0 )
+	fprintf( fp, "ShortDescr   %s~\n",	obj->short_descr.c_str()     );
+    if ( QUICKMATCH( *obj->description.c_str(), *obj->pIndexData->description.c_str() ) == 0 )
+	fprintf( fp, "Description  %s~\n",	obj->description.c_str()     );
+    if ( QUICKMATCH( *obj->action_desc.c_str(), *obj->pIndexData->action_desc.c_str() ) == 0 )
+	fprintf( fp, "ActionDesc   %s~\n",	obj->action_desc.c_str()     );
     fprintf( fp, "Vnum         %d\n",	obj->pIndexData->vnum	     );
     if ( os_type == OS_CORPSE && obj->in_room )
       fprintf( fp, "Room         %d\n",   obj->in_room->vnum         );
@@ -639,15 +624,15 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest,
     case ITEM_SCROLL:
 	if ( IS_VALID_SN(obj->value[1]) )
 	    fprintf( fp, "Spell 1      '%s'\n",
-		skill_table[obj->value[1]]->name );
+		skill_table[obj->value[1]]->name.c_str() );
 
 	if ( IS_VALID_SN(obj->value[2]) )
 	    fprintf( fp, "Spell 2      '%s'\n",
-		skill_table[obj->value[2]]->name );
+		skill_table[obj->value[2]]->name.c_str() );
 
 	if ( IS_VALID_SN(obj->value[3]) )
 	    fprintf( fp, "Spell 3      '%s'\n",
-		skill_table[obj->value[3]]->name );
+		skill_table[obj->value[3]]->name.c_str() );
 
 	break;
 
@@ -655,17 +640,17 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest,
     case ITEM_WAND:
 	if ( IS_VALID_SN(obj->value[3]) )
 	    fprintf( fp, "Spell 3      '%s'\n",
-		skill_table[obj->value[3]]->name );
+		skill_table[obj->value[3]]->name.c_str() );
 
 	break;
     case ITEM_SALVE:
 	if ( IS_VALID_SN(obj->value[4]) )
 	    fprintf( fp, "Spell 4      '%s'\n",
-		skill_table[obj->value[4]]->name );
+		skill_table[obj->value[4]]->name.c_str() );
 
 	if ( IS_VALID_SN(obj->value[5]) )
 	    fprintf( fp, "Spell 5      '%s'\n",
-		skill_table[obj->value[5]]->name );
+		skill_table[obj->value[5]]->name.c_str() );
 	break;
     }
 
@@ -692,7 +677,7 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest,
 	}
 	else
 	  fprintf( fp, "AffectData   '%s' %d %d %d %s\n",
-	    skill_table[paf->type]->name,
+	    skill_table[paf->type]->name.c_str(),
 	    paf->duration,
 	     ((paf->location == APPLY_WEAPONSPELL
 	    || paf->location == APPLY_WEARSPELL
@@ -708,7 +693,7 @@ void fwrite_obj( CHAR_DATA *ch, OBJ_DATA *obj, FILE *fp, int iNest,
 
     for ( ed = obj->first_extradesc; ed; ed = ed->next )
 	fprintf( fp, "ExtraDescr   %s~ %s~\n",
-	    ed->keyword, ed->description );
+	    ed->keyword.c_str(), ed->description.c_str() );
 
     fprintf( fp, "End\n\n" );
 
@@ -735,18 +720,18 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     extern char strArea[MAX_INPUT_LENGTH];
     char buf[MAX_INPUT_LENGTH];
 
-    CREATE( ch, CHAR_DATA, 1 );
+   ch = new CHAR_DATA;
     for ( x = 0; x < MAX_WEAR; x++ )
 	for ( i = 0; i < MAX_LAYERS; i++ )
 	    save_equipment[x][i] = NULL;
     clear_char( ch );
     loading_char = ch;
 
-    CREATE( ch->pcdata, PC_DATA, 1 );
+    ch->pcdata = new PC_DATA;
     d->character		= ch;
     ch->desc			= d;
-    ch->pcdata->filename	= STRALLOC( name );
-    ch->name			= NULL;
+    ch->pcdata->filename	= name;
+    ch->name			= "";
     ch->act			= multimeb(PLR_BLANK, PLR_COMBINE, PLR_PROMPT, -1);
     ch->perm_str		= 13;
     ch->perm_int		= 13;
@@ -759,7 +744,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     ch->no_susceptible 		= 0;
     ch->no_immune 		= 0;
     ch->was_in_room		= NULL;
-    xCLEAR_BITS(ch->class);
+    xCLEAR_BITS(ch->char_class);
     xCLEAR_BITS(ch->no_affected_by);
     ch->pcdata->condition[COND_THIRST]	= 48;
     ch->pcdata->condition[COND_FULL]	= 48;
@@ -772,7 +757,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     for(i = 0; i < MAX_SKILL; i++)
         ch->pcdata->learned[i]		= 0;
     ch->pcdata->release_date		= 0;
-    ch->pcdata->helled_by		= NULL;
+    ch->pcdata->helled_by		= "";
     ch->saving_poison_death 		= 0;
     ch->saving_wand			= 0;
     ch->saving_para_petri		= 0;
@@ -791,7 +776,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     ch->pcdata->imc_deaf		= 0;
     ch->pcdata->imc_deny		= 0;
     ch->pcdata->imc_allow		= 0;
-    ch->pcdata->ice_listen		= NULL;
+    ch->pcdata->ice_listen		= "";
     for (i = 0; i < AT_MAXCOLOR; ++i)
        ch->pcdata->colorize[i] = -1;
     
@@ -809,7 +794,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
       else
       {
 	sprintf( buf, "%s player data for: %s (%dK)",
-	  preload ? "Preloading" : "Loading", ch->pcdata->filename,
+	  preload ? "Preloading" : "Loading", ch->pcdata->filename.c_str(),
 		(int) fst.st_size/1024 );
 	log_string_plus( buf, LOG_COMM, LEVEL_GREATER );
       }
@@ -846,7 +831,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
 		break;
 	    }
 
-	    word = fread_word( fp );
+	    word = (char *) fread_word( fp )->c_str();
 	    if ( !strcmp( word, "PLAYER" ) )
 	    {
 		fread_char ( ch, fp, preload );
@@ -886,36 +871,36 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
 	strcpy(strArea, "$");
     }
 
-    if ( ch->pcdata->ice_listen == NULL )
+    if ( ch->pcdata->ice_listen == "" )
         ch->pcdata->ice_listen = str_dup("");
 
     if ( !found )
     {
-        ch->name	   		= STRALLOC( name );
-	ch->short_descr			= STRALLOC( "" );
-	ch->long_descr			= STRALLOC( "" );
-	ch->description			= STRALLOC( "" );
+        ch->name	   		= name;
+	ch->short_descr			= "";
+	ch->long_descr			= "";
+	ch->description			= "";
 	ch->editor			= NULL;
-	ch->pcdata->clan_name		= STRALLOC( "" );
+	ch->pcdata->clan_name		= "";
 	ch->pcdata->clan		= NULL;
-	ch->pcdata->council_name 	= STRALLOC( "" );
+	ch->pcdata->council_name 	= "";
 	ch->pcdata->council 		= NULL;
-  	ch->pcdata->deity_name		= STRALLOC( "" );
+  	ch->pcdata->deity_name		= "";
 	ch->pcdata->deity		= NULL;
         ch->pcdata->first_alias		= NULL;
 	ch->pcdata->last_alias		= NULL;
 	ch->pcdata->pet			= NULL;
-	ch->pcdata->pwd			= str_dup( "" );
-	ch->pcdata->bamfin		= str_dup( "" );
-	ch->pcdata->bamfout		= str_dup( "" );
-	ch->pcdata->rank		= str_dup( "" );
-	ch->pcdata->bestowments		= str_dup( "" );
-	ch->pcdata->title		= STRALLOC( "" );
-	ch->pcdata->homepage		= str_dup( "" );
-	ch->pcdata->bio 		= STRALLOC( "" );
-	ch->pcdata->authed_by		= STRALLOC( "" );
-	ch->pcdata->prompt		= STRALLOC( "" );
-	ch->pcdata->fprompt		= STRALLOC( "" );
+	ch->pcdata->pwd			= "";
+	ch->pcdata->bamfin		= "";
+	ch->pcdata->bamfout		= "";
+	ch->pcdata->rank		= "";
+	ch->pcdata->bestowments		= "";
+	ch->pcdata->title		= "";
+	ch->pcdata->homepage		= "";
+	ch->pcdata->bio 		= "";
+	ch->pcdata->authed_by		= "";
+	ch->pcdata->prompt		= "";
+	ch->pcdata->fprompt		= "";
 	ch->pcdata->r_range_lo		= 0;
 	ch->pcdata->r_range_hi		= 0;
 	ch->pcdata->m_range_lo		= 0;
@@ -926,28 +911,28 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
     }
     else
     {
-	if ( !ch->name )
-    		ch->name	= STRALLOC( name );
-	if ( !ch->pcdata->clan_name )
+	if ( ch->name.empty() )
+    		ch->name	= name;
+	if ( ch->pcdata->clan_name.empty() )
 	{
-	  ch->pcdata->clan_name	= STRALLOC( "" );
+	  ch->pcdata->clan_name	= "";
 	  ch->pcdata->clan	= NULL;
 	}
-	if ( !ch->pcdata->council_name )
+	if ( ch->pcdata->council_name.empty() )
 	{
-	  ch->pcdata->council_name = STRALLOC( "" );
+	  ch->pcdata->council_name = "";
 	  ch->pcdata->council 	= NULL;
 	}
-	if ( !ch->pcdata->deity_name )
+	if ( ch->pcdata->deity_name.empty() )
 	{
-	  ch->pcdata->deity_name = STRALLOC( "" );
+	  ch->pcdata->deity_name = "";
 	  ch->pcdata->deity	 = NULL;
 	}
-        if ( !ch->pcdata->bio )
-          ch->pcdata->bio	 = STRALLOC( "" );
+        if ( ch->pcdata->bio.empty() )
+          ch->pcdata->bio	 = "";
 
-	if ( !ch->pcdata->authed_by )
-	  ch->pcdata->authed_by	 = STRALLOC( "" );
+	if ( ch->pcdata->authed_by.empty() )
+	  ch->pcdata->authed_by	 = "";
 
 	if ( xIS_SET(ch->act, PLR_FLEE) )
 	  xREMOVE_BIT(ch->act, PLR_FLEE);
@@ -994,7 +979,7 @@ bool load_char_obj( DESCRIPTOR_DATA *d, char *name, bool preload )
 
 void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 {
-    char buf[MAX_STRING_LENGTH];
+    string buf;
     char *line;
     char *word;
     int x1, x2, x3, x4, x5, x6, x7, i;
@@ -1004,7 +989,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
     killcnt = 0;
     for ( ; ; )
     {
-	word   = feof( fp ) ? "End" : fread_word( fp );
+	word   = (char *) (feof( fp ) ? "End" : fread_word( fp )->c_str());
 	fMatch = FALSE;
 
 	switch ( UPPER(word[0]) )
@@ -1030,7 +1015,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		    fread_to_eol( fp );
 		    break;
 		}
-		CREATE( paf, AFFECT_DATA, 1 );
+		paf = new AFFECT_DATA;
 		if ( !strcmp( word, "Affect" ) )
 		{
 		    paf->type	= fread_number( fp );
@@ -1038,11 +1023,11 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		else
 		{
 		    int sn;
-		    char *sname = fread_word(fp);
+		    string sname = *fread_word(fp);
 
-		    if ( (sn=skill_lookup(sname)) < 0 )
+		    if ( (sn=skill_lookup(&sname)) < 0 )
 		    {
-			if ( (sn=herb_lookup(sname)) < 0 )
+			if ( (sn=herb_lookup((char *) sname.c_str())) < 0 )
 			    bug( "Fread_char: unknown skill.", 0 );
 			else
 			    sn += TYPE_HERB;
@@ -1094,7 +1079,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
                     fread_to_eol( fp );
                     break;
                 }
-                CREATE( pal, ALIAS_DATA, 1 );
+                pal = new ALIAS_DATA;
                 
                 pal->name	= fread_string_nohash( fp );
                 pal->cmd	= fread_string_nohash( fp );
@@ -1138,26 +1123,26 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 
 		if ( !preload
 		&&   ch->pcdata->clan_name[0] != '\0'
-		&& ( ch->pcdata->clan = get_clan( ch->pcdata->clan_name )) == NULL )
+		&& ( ch->pcdata->clan = get_clan( &ch->pcdata->clan_name )) == NULL )
 		{
-		  sprintf( buf, "Warning: the organization %s no longer exists, and therefore you no longer\n\rbelong to that organization.\n\r",
-		           ch->pcdata->clan_name );
-		  send_to_char( buf, ch );
-		  STRFREE( ch->pcdata->clan_name );
-		  ch->pcdata->clan_name = STRALLOC( "" );
+		  buf = "Warning: the organization ";
+                  buf += ch->pcdata->clan_name.c_str();
+                  buf += " no longer exists, and therefore you no longer\n\rbelong to that organization.\n\r";
+		  send_to_char( (char *) buf.c_str(), ch );
+		  ch->pcdata->clan_name = "";
 		}
 		fMatch = TRUE;
 		break;
 	    }
-	   KEY( "Class",  ch->class,       fread_bitvector( fp ) );
+	   KEY( "Class",  ch->char_class,       fread_bitvector( fp ) );
            if ( !str_cmp( word, "Color" ) )
  	    {
  		char *cword;
  		int at;
  		
- 		cword = fread_word(fp);
+ 		cword = (char *) fread_word(fp)->c_str();
  		for (at = 0; at < AT_MAXCOLOR; ++at)
- 		  if (!str_cmp(cword, at_color_table[at].name))
+ 		  if (!str_cmp(cword, (char *) at_color_table[at].name.c_str()))
  		    break; 
  		if (at < AT_MAXCOLOR)
  		  ch->pcdata->colorize[at] = fread_number(fp);
@@ -1189,13 +1174,13 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		ch->pcdata->council_name = fread_string( fp );
 		if ( !preload
 		&&   ch->pcdata->council_name[0] != '\0'
-		&& ( ch->pcdata->council = get_council( ch->pcdata->council_name )) == NULL )
+		&& ( ch->pcdata->council = get_council( (char *) ch->pcdata->council_name.c_str() )) == NULL )
 		{
-		  sprintf( buf, "Warning: the council %s no longer exists, and herefore you no longer\n\rbelong to a council.\n\r",
-		           ch->pcdata->council_name );
-		  send_to_char( buf, ch );
-		  STRFREE( ch->pcdata->council_name );
-		  ch->pcdata->council_name = STRALLOC( "" );
+		  buf = "Warning: the council ";
+                  buf += ch->pcdata->council_name.c_str();
+                  buf += " no longer exists, and herefore you no longer\n\rbelong to a council.\n\r";
+		  send_to_char( (char *) buf.c_str(), ch );
+		  ch->pcdata->council_name = "";
 		}
 		fMatch = TRUE;
 		break;
@@ -1211,13 +1196,13 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
  
                 if ( !preload
                 &&   ch->pcdata->deity_name[0] != '\0'
-                && ( ch->pcdata->deity = get_deity( ch->pcdata->deity_name )) == NULL )
+                && ( ch->pcdata->deity = get_deity( (char *) ch->pcdata->deity_name.c_str() )) == NULL )
                 {
-                  sprintf( buf, "Warning: the deity %s no longer exists.\n\r",
-                           ch->pcdata->deity_name );
-                  send_to_char( buf, ch );
-                  STRFREE( ch->pcdata->deity_name );
-                  ch->pcdata->deity_name = STRALLOC( "" );
+                  buf = "Warning: the deity ";
+                  buf += ch->pcdata->deity_name.c_str();
+                  buf += " no longer exists.\n\r";
+                  send_to_char( (char *) buf.c_str(), ch );
+                  ch->pcdata->deity_name = "";
 		  ch->pcdata->favor = 0;
                 }
                 fMatch = TRUE;
@@ -1253,13 +1238,13 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 
 		if ( !preload
 		&&   ch->pcdata->clan_name[0] != '\0'
-		&& ( ch->pcdata->clan = get_clan( ch->pcdata->clan_name )) == NULL )
+		&& ( ch->pcdata->clan = get_clan( &ch->pcdata->clan_name )) == NULL )
 		{
-		  sprintf( buf, "Warning: the organization %s no longer exists, and therefore you no longer\n\rbelong to that organization.\n\r",
-		           ch->pcdata->clan_name );
-		  send_to_char( buf, ch );
-		  STRFREE( ch->pcdata->clan_name );
-		  ch->pcdata->clan_name = STRALLOC( "" );
+		  buf = "Warning: the organization ";
+                  buf += ch->pcdata->clan_name.c_str();
+                  buf += " no longer exists, and therefore you no longer\n\rbelong to that organization.\n\r";
+		  send_to_char( (char *) buf.c_str(), ch );
+		  ch->pcdata->clan_name = "";
 		}
 		fMatch = TRUE;
 		break;
@@ -1275,8 +1260,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	      ch->pcdata->helled_by = fread_string(fp);
 	      if ( ch->pcdata->release_date < current_time )
 	      {
-	        STRFREE(ch->pcdata->helled_by);
-	        ch->pcdata->helled_by = NULL;
+	        ch->pcdata->helled_by = "";
 	        ch->pcdata->release_date = 0;
 	      }
 	      fMatch = TRUE;
@@ -1337,8 +1321,8 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    	else
 	    	{
 	    		/* Add the name to the list */
-	    		CREATE(inode, IGNORE_DATA, 1);
-	    		inode->name = STRALLOC(temp);
+	    		inode = new IGNORE_DATA;
+	    		inode->name = temp;
 	    		inode->next = NULL;
 	    		inode->prev = NULL;
 	    		
@@ -1376,10 +1360,10 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    KEY( "Level",  ch->level[max_sec_level(ch)], fread_number( fp ) );
 	    for( i = 0; i <= MAX_CLASS; i++)
 		{
-		  if( xIS_SET( ch->class, i ) )
+		  if( xIS_SET( ch->char_class, i ) )
 		  {
-		    sprintf(buf, "Level%d", i );
-	            KEY( buf,	ch->level[i],		fread_number( fp ) );
+		    buf = "Level" + i;
+	            KEY( buf.c_str(),	ch->level[i],		fread_number( fp ) );
 		  }
 		}
 	    KEY( "LongDescr",	ch->long_descr,		fread_string( fp ) );
@@ -1415,7 +1399,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    if ( !strcmp ( "Nuisance", word ) )
             {
                 fMatch = TRUE;
-                CREATE( ch->pcdata->nuisance, NUISANCE_DATA, 1 );
+                ch->pcdata->nuisance = new NUISANCE_DATA;
                 ch->pcdata->nuisance->time = fread_number( fp );
                 ch->pcdata->nuisance->max_time = fread_number( fp );
                 ch->pcdata->nuisance->flags = fread_number( fp );
@@ -1424,7 +1408,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    if ( !strcmp ( "NuisanceNew", word ) )
 	    {
 		fMatch = TRUE;
-		CREATE( ch->pcdata->nuisance, NUISANCE_DATA, 1 );
+		ch->pcdata->nuisance = new NUISANCE_DATA;
 		ch->pcdata->nuisance->time = fread_number( fp );
 		ch->pcdata->nuisance->max_time = fread_number( fp );
 		ch->pcdata->nuisance->flags = fread_number( fp );
@@ -1541,8 +1525,10 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    {
 		if ( !preload )
 		{
-		  sprintf( buf, "Last connected from: %s\n\r", fread_word( fp ) );
-		  send_to_char( buf, ch );
+		  buf = "Last connected from: :";
+                  buf += fread_word( fp )->c_str();
+                  buf += "\n\r";
+		  send_to_char( (char *) buf.c_str(), ch );
 		}
 		else
 		  fread_to_eol( fp );
@@ -1563,7 +1549,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		else
 		{
 		  value = fread_number( fp );
-		    sn = bsearch_skill_exact( fread_word( fp ), gsn_first_skill, gsn_first_weapon-1 );
+		    sn = bsearch_skill_exact( (char *) fread_word( fp )->c_str(), gsn_first_skill, gsn_first_weapon-1 );
 		  if ( sn < 0 )
 		    bug( "Fread_char: unknown skill.", 0 );
 		  else
@@ -1597,7 +1583,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		{
 		  value = fread_number( fp );
 
-		  sn = bsearch_skill_exact( fread_word( fp ), gsn_first_spell, gsn_first_skill-1 );
+		  sn = bsearch_skill_exact( (char *) fread_word( fp )->c_str(), gsn_first_spell, gsn_first_skill-1 );
 		  if ( sn < 0 )
 		    bug( "Fread_char: unknown spell.", 0 );
 		  else
@@ -1620,34 +1606,34 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	case 'E':
 	    if ( !strcmp( word, "End" ) )
 	    {
-		if (!ch->short_descr)
-		  ch->short_descr	= STRALLOC( "" );
-		if (!ch->long_descr)
-		  ch->long_descr	= STRALLOC( "" );
-		if (!ch->description)
-		  ch->description	= STRALLOC( "" );
-		if (!ch->pcdata->pwd)
-		  ch->pcdata->pwd	= str_dup( "" );
-		if (!ch->pcdata->bamfin)
-		  ch->pcdata->bamfin	= str_dup( "" );
-		if (!ch->pcdata->bamfout)
-		  ch->pcdata->bamfout	= str_dup( "" );
-		if (!ch->pcdata->bio)
-		  ch->pcdata->bio	= STRALLOC( "" );
-		if (!ch->pcdata->rank)
-		  ch->pcdata->rank	= str_dup( "" );
-		if (!ch->pcdata->bestowments)
-		  ch->pcdata->bestowments = str_dup( "" );
-		if (!ch->pcdata->title)
-		  ch->pcdata->title	= STRALLOC( "" );
-		if (!ch->pcdata->homepage)
-		  ch->pcdata->homepage	= str_dup( "" );
-		if (!ch->pcdata->authed_by)
-		  ch->pcdata->authed_by = STRALLOC( "" );
-		if (!ch->pcdata->prompt )
-		  ch->pcdata->prompt	= STRALLOC( "" );
-	        if (!ch->pcdata->fprompt )
-		  ch->pcdata->fprompt   = STRALLOC( "" );
+		if (ch->short_descr.empty())
+		  ch->short_descr	= "";
+		if (ch->long_descr.empty())
+		  ch->long_descr	= "";
+		if (ch->description.empty())
+		  ch->description	= "";
+		if (ch->pcdata->pwd.empty())
+		  ch->pcdata->pwd	= "";
+		if (ch->pcdata->bamfin.empty())
+		  ch->pcdata->bamfin	= "";
+		if (!ch->pcdata->bamfout.empty())
+		  ch->pcdata->bamfout	= "";
+		if (ch->pcdata->bio.empty())
+		  ch->pcdata->bio	= "";
+		if (ch->pcdata->rank.empty())
+		  ch->pcdata->rank	= "";
+		if (ch->pcdata->bestowments.empty())
+		  ch->pcdata->bestowments = "";
+		if (ch->pcdata->title.empty())
+		  ch->pcdata->title	= "";
+		if (ch->pcdata->homepage.empty())
+		  ch->pcdata->homepage	= "";
+		if (ch->pcdata->authed_by.empty())
+		  ch->pcdata->authed_by = "";
+		if (ch->pcdata->prompt.empty() )
+		  ch->pcdata->prompt	= "";
+	        if (ch->pcdata->fprompt.empty() )
+		  ch->pcdata->fprompt   = "";
 		ch->editor		= NULL;
 		killcnt = URANGE( 2, ((ch->level[max_sec_level(ch)]+3) * MAX_KILLTRACK)/LEVEL_AVATAR, MAX_KILLTRACK );
 		if ( killcnt < MAX_KILLTRACK )
@@ -1665,12 +1651,12 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 			if ( ch->speaking == 0 )
 				ch->speaking = ~0;
 			
-			CREATE(ch->pcdata->tell_history, char *, 26);
+			ch->pcdata->tell_history = new string[26];
 			for(i = 0; i < 26; i++)
-				ch->pcdata->tell_history[i] = NULL;
+				ch->pcdata->tell_history[i] = "";
 		}
-		if ( !ch->pcdata->prompt )
-		  ch->pcdata->prompt = STRALLOC("");
+		if ( ch->pcdata->prompt.empty() )
+		  ch->pcdata->prompt = "";
 
                 /* this disallows chars from being 6', 180lbs, but easier than a flag */
                 if ( ch->height== 72)
@@ -1682,10 +1668,10 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 	    }
 	    KEY( "Exp",		ch->exp[max_sec_level(ch)], fread_number(fp ) );
             for(i = 0; i<=MAX_CLASS; i++ )
-		if(xIS_SET(ch->class, i) )
+		if(xIS_SET(ch->char_class, i) )
 		{
-		  sprintf(buf, "Exp%d", i );
-	          KEY( buf,		ch->exp[i],		fread_number( fp ) );
+		  buf = "Exp" + i;
+	          KEY( buf.c_str(),		ch->exp[i],		fread_number( fp ) );
 		}
 	    break;
 
@@ -1701,7 +1687,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		{
 		  value = fread_number( fp );
 
-		  sn = bsearch_skill_exact( fread_word( fp ), gsn_first_tongue, gsn_top_sn-1 );
+		  sn = bsearch_skill_exact( (char *) fread_word( fp )->c_str(), gsn_first_tongue, gsn_top_sn-1 );
 		  if ( sn < 0 )
 		    bug( "Fread_char: unknown tongue.", 0 );
 		  else
@@ -1728,10 +1714,9 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		if ( isalpha(ch->pcdata->title[0])
 		||   isdigit(ch->pcdata->title[0]) )
 		{
-		    sprintf( buf, " %s", ch->pcdata->title );
-		    if ( ch->pcdata->title )
-		      STRFREE( ch->pcdata->title );
-		    ch->pcdata->title = STRALLOC( buf );
+		    buf[0] = ' ';
+                    buf += (char *) ch->pcdata->title.c_str();
+		    ch->pcdata->title = buf;
 		}
 		fMatch = TRUE;
 		break;
@@ -1761,7 +1746,7 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 		{
 		  value = fread_number( fp );
 
-		  sn = bsearch_skill_exact( fread_word( fp ), gsn_first_weapon, gsn_first_tongue-1 );
+		  sn = bsearch_skill_exact( (char *) fread_word( fp )->c_str(), gsn_first_weapon, gsn_first_tongue-1 );
 		  if ( sn < 0 )
 		    bug( "Fread_char: unknown weapon.", 0 );
 		  else
@@ -1785,8 +1770,9 @@ void fread_char( CHAR_DATA *ch, FILE *fp, bool preload )
 
 	if ( !fMatch )
 	{
-	    sprintf( buf, "Fread_char: no match: %s", word );
-	    bug( buf, 0 );
+	    buf = "Fread_char: no match: ";
+            buf += word;
+	    bug( (char *) buf.c_str(), 0 );
 	}
     }
 }
@@ -1816,7 +1802,7 @@ void fread_obj( CHAR_DATA *ch, FILE *fp, int os_type )
 
     for ( ; ; )
     {
-	word   = feof( fp ) ? "End" : fread_word( fp );
+	word   = (char *) (feof( fp ) ? "End" : fread_word( fp )->c_str());
 	fMatch = FALSE;
 
 	switch ( UPPER(word[0]) )
@@ -1893,33 +1879,27 @@ void fread_obj( CHAR_DATA *ch, FILE *fp, int os_type )
 	    {
 		if ( !fNest || !fVnum )
 		{
-		    if ( obj->name )
+		    if ( obj->name.empty() )
 			sprintf ( buf, "Fread_obj: %s incomplete object.",
-				obj->name );
+				obj->name.c_str() );
 		    else
 			sprintf ( buf, "Fread_obj: incomplete object." );
 		    bug( buf, 0 );
-		    if ( obj->name )
-		      STRFREE( obj->name        );
-		    if ( obj->description )
-		      STRFREE( obj->description );
-		    if ( obj->short_descr )
-		      STRFREE( obj->short_descr );
-		    DISPOSE( obj );
+		    delete obj;
 		    return;
 		}
 		else
 		{
 		    int wear_loc = obj->wear_loc;
 
-		    if ( !obj->name )
-			obj->name = QUICKLINK( obj->pIndexData->name );
-		    if ( !obj->description )
-			obj->description = QUICKLINK( obj->pIndexData->description );
-		    if ( !obj->short_descr )
-			obj->short_descr = QUICKLINK( obj->pIndexData->short_descr );
-		    if ( !obj->action_desc )
-			obj->action_desc = QUICKLINK( obj->pIndexData->action_desc );
+		    if ( obj->name.empty() )
+			obj->name = obj->pIndexData->name;
+		    if ( obj->description.empty() )
+			obj->description = obj->pIndexData->description;
+		    if ( obj->short_descr.empty() )
+			obj->short_descr = obj->pIndexData->short_descr;
+		    if ( obj->action_desc.empty() )
+			obj->action_desc = obj->pIndexData->action_desc;
 		    LINK(obj, first_object, last_object, next, prev );
 		    obj->pIndexData->count += obj->count;
 		    if ( !obj->serial )
@@ -2100,18 +2080,10 @@ void fread_obj( CHAR_DATA *ch, FILE *fp, int os_type )
 	    bug( "Fread_obj: no match.", 0 );
 	    bug( word, 0 );
 	    fread_to_eol( fp );
-	    if ( obj->name )
-		STRFREE( obj->name        );
-	    if ( obj->description )
-		STRFREE( obj->description );
-	    if ( obj->short_descr )
-		STRFREE( obj->short_descr );
 	    while ( (ed=obj->first_extradesc) != NULL )
 	    {
-		STRFREE( ed->keyword );
-		STRFREE( ed->description );
 		UNLINK( ed, obj->first_extradesc, obj->last_extradesc, next, prev );
-		DISPOSE( ed );
+		delete ed;
 	    }
 	    while ( (paf=obj->first_affect) != NULL )
 	    {
@@ -2137,35 +2109,31 @@ void set_alarm( long seconds )
 /*
  * Based on last time modified, show when a player was last on	-Thoric
  */
-void do_last( CHAR_DATA *ch, char *argument )
+void do_last( CHAR_DATA *ch, string *argument )
 {
     char buf [MAX_STRING_LENGTH];
-    char arg [MAX_INPUT_LENGTH];
-    char name[MAX_INPUT_LENGTH];
+    string arg;
+    string name;
     struct stat fst;
 
-    one_argument( argument, arg );
+    one_argument( argument, &arg );
     if ( arg[0] == '\0' )
     {
 	send_to_char( "Usage: last <playername>\n\r", ch );
 	return;
     }
-    if ( get_trust( ch ) < LEVEL_ASCENDANT
-    && ( !str_cmp( arg, "Thoric" )
-    ||   !str_cmp( arg, "Haus" )
-    ||   !str_cmp( arg, "Gorog" )
-    ||   !str_cmp( arg, "Blodkai" ) ) )
+    if ( get_trust( ch ) < LEVEL_ASCENDANT )
     {
 	set_char_color( AT_IMMORT, ch );
 	send_to_char( "Their godly glow prevents you from getting a good look.\n\r", ch );
 	return;
     }
-    strcpy( name, capitalize(arg) );
-    sprintf( buf, "%s%c/%s", PLAYER_DIR, tolower(arg[0]), name );
+    name = capitalize((char *) arg.c_str());
+    sprintf( buf, "%s%c/%s", PLAYER_DIR, tolower(arg[0]), name.c_str() );
     if ( stat( buf, &fst ) != -1 )
-      sprintf( buf, "%s was last on: %s\r", name, ctime( &fst.st_mtime ) );
+      sprintf( buf, "%s was last on: %s\r", name.c_str(), ctime( &fst.st_mtime ) );
     else
-      sprintf( buf, "%s was not found.\n\r", name );
+      sprintf( buf, "%s was not found.\n\r", name.c_str() );
    send_to_char( buf, ch );
 }
 
@@ -2187,12 +2155,12 @@ void write_corpses( CHAR_DATA *ch, char *name, OBJ_DATA *objrem )
     return;
   }
   if ( ch )
-    name = ch->name;
+    name = (char *) ch->name.c_str();
   /* Go by vnum, less chance of screwups. -- Altrag */
   for ( corpse = first_object; corpse; corpse = corpse->next )
     if ( corpse->pIndexData->vnum == OBJ_VNUM_CORPSE &&
          corpse->in_room != NULL &&
-        !str_cmp(corpse->short_descr+14, name) &&
+        !str_cmp((char *) (corpse->short_descr.c_str())+14, name) &&
 	objrem != corpse )
     {
       if ( !fp )
@@ -2267,7 +2235,7 @@ void load_corpses( void )
           bug( "Load_corpses: # not found.", 0 );
           break;
         }
-        word = fread_word( fpArea );
+        word = (char *) fread_word( fpArea )->c_str();
         if ( !strcmp(word, "CORPSE" ) )
           fread_obj( NULL, fpArea, OS_CORPSE );
         else if ( !strcmp(word, "OBJECT" ) )
@@ -2306,14 +2274,14 @@ void fwrite_mobile( FILE *fp, CHAR_DATA *mob )
         		&& mob->was_in_room )
             		? mob->was_in_room->vnum
             		: mob->in_room->vnum ); 
-  if ( QUICKMATCH( *mob->name, *mob->pIndexData->player_name) == 0 )
-        fprintf( fp, "Name     %s~\n", mob->name );
-  if ( QUICKMATCH( *mob->short_descr, *mob->pIndexData->short_descr) == 0 )
-  	fprintf( fp, "Short	%s~\n", mob->short_descr );
-  if ( QUICKMATCH( *mob->long_descr, *mob->pIndexData->long_descr) == 0 )
-  	fprintf( fp, "Long	%s~\n", mob->long_descr );
-  if ( QUICKMATCH(* mob->description, *mob->pIndexData->description) == 0 )
-  	fprintf( fp, "Description %s~\n", mob->description );
+  if ( QUICKMATCH( *mob->name.c_str(), *mob->pIndexData->player_name.c_str()) == 0 )
+        fprintf( fp, "Name     %s~\n", mob->name.c_str() );
+  if ( QUICKMATCH( *mob->short_descr.c_str(), *mob->pIndexData->short_descr.c_str()) == 0 )
+  	fprintf( fp, "Short	%s~\n", mob->short_descr.c_str() );
+  if ( QUICKMATCH( *mob->long_descr.c_str(), *mob->pIndexData->long_descr.c_str()) == 0 )
+  	fprintf( fp, "Long	%s~\n", mob->long_descr.c_str() );
+  if ( QUICKMATCH(* mob->description.c_str(), *mob->pIndexData->description.c_str()) == 0 )
+  	fprintf( fp, "Description %s~\n", mob->description.c_str() );
   fprintf( fp, "Position %d\n", mob->position );
   fprintf( fp, "Flags %s\n",   print_bitvector(&mob->act) );
 /* Might need these later --Shaddai
@@ -2337,7 +2305,7 @@ CHAR_DATA *  fread_mobile( FILE *fp )
   int inroom = 0;
   ROOM_INDEX_DATA *pRoomIndex = NULL;
 
-  word   = feof( fp ) ? "EndMobile" : fread_word( fp );
+  word   = (char *) (feof( fp ) ? "EndMobile" : fread_word( fp )->c_str());
   if ( !strcmp(word, "Vnum") )
   {
     int vnum;
@@ -2347,7 +2315,7 @@ CHAR_DATA *  fread_mobile( FILE *fp )
     if ( !mob )
     {
 	for ( ; ; ) {
-	  word   = feof( fp ) ? "EndMobile" : fread_word( fp );
+	  word   = (char *) (feof( fp ) ? "EndMobile" : fread_word( fp )->c_str());
 	  /* So we don't get so many bug messages when something messes up
 	   * --Shaddai 
 	   */
@@ -2361,7 +2329,7 @@ CHAR_DATA *  fread_mobile( FILE *fp )
   else
   {
 	for ( ; ; ) {
-	  word   = feof( fp ) ? "EndMobile" : fread_word( fp );
+	  word   = (char *) (feof( fp ) ? "EndMobile" : fread_word( fp )->c_str());
 	  /* So we don't get so many bug messages when something messes up
 	   * --Shaddai 
 	   */
@@ -2373,7 +2341,7 @@ CHAR_DATA *  fread_mobile( FILE *fp )
 	return NULL;
   }
   for ( ; ;) {
-       word   = feof( fp ) ? "EndMobile" : fread_word( fp );
+       word   = (char *) (feof( fp ) ? "EndMobile" : fread_word( fp )->c_str());
        fMatch = FALSE; 
        switch ( UPPER(word[0]) ) {
 	case '*':
